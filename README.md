@@ -2,7 +2,8 @@
 
 Notes and demo for Cloud Native Live: AI Inference with Crossplane &
 Modelplane, October 28 2026. [outline.md](outline.md) is the run of show
-and talking points.
+and talking points, and [scheduler.md](scheduler.md) describes the scheduler
+for Q&A.
 
 ## The scheduler demo
 
