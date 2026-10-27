@@ -7,7 +7,8 @@
 set -euo pipefail
 
 : "${MODELPLANE:?set MODELPLANE to a Modelplane checkout}"
-ADDRESS="${ADDRESS:-localhost:9443}"
+# Not localhost: render's Crossplane container calls in from outside the host.
+ADDRESS="${ADDRESS:-0.0.0.0:9443}"
 
 cd "${MODELPLANE}"
 exec nix develop -c uv run --frozen --package compose-model-deployment \
