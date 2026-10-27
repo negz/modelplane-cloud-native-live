@@ -1,0 +1,12 @@
+# The scheduler, run from a Modelplane checkout rather than its packaged image,
+# so an edit to it shows up in the next render without a rebuild. See
+# ./scheduler.sh. Render ignores spec.package under the Development runtime.
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: modelplane-modelplanecompose-model-deployment
+  annotations:
+    render.crossplane.io/runtime: Development
+    render.crossplane.io/runtime-development-target: localhost:9443
+spec:
+  package: xpkg.upbound.io/modelplane/modelplane_compose-model-deployment

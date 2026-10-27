@@ -1,0 +1,14 @@
+diff --git a/functions/compose-model-deployment/function/scheduling.py b/functions/compose-model-deployment/function/scheduling.py
+index c46388b2..c2f2950f 100644
+--- a/functions/compose-model-deployment/function/scheduling.py
++++ b/functions/compose-model-deployment/function/scheduling.py
+@@ -935,7 +935,8 @@ def _pick_cluster(
+         placements = _place_engines(cluster, engines, ledger)
+         if placements is None:
+             continue
+-        key = (load.get(_name(cluster.metadata), 0), _name(cluster.metadata))
++        # Pack: prefer the cluster already hosting the most of our replicas.
++        key = (-load.get(_name(cluster.metadata), 0), _name(cluster.metadata))
+         if best_key is None or key < best_key:
+             best_key = key
+             best = (cluster, placements)

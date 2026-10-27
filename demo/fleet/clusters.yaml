@@ -1,0 +1,89 @@
+# A hand-written stand-in for the live fleet, trimmed to the fields the
+# scheduler reads: Ready, the gateway, and the GPU pools each cluster publishes
+# from its InferenceClasses. On the day, ./export-fleet.sh replaces this
+# directory with the real control plane's InferenceClusters and ModelReplicas.
+apiVersion: modelplane.ai/v1alpha1
+kind: InferenceCluster
+metadata:
+  name: eks-us-east
+  labels:
+    modelplane.ai/region: us-east
+spec:
+  cluster:
+    source: EKS
+    eks:
+      region: us-east-1
+  stack: Standard
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+    reason: Available
+    lastTransitionTime: "2026-10-27T00:00:00Z"
+  providerConfigRef:
+    name: eks-us-east
+  gateway:
+    address: 10.0.0.1
+    hostname: eks-us-east.gateway.example.com
+  gpuPools:
+  - name: gpu-l4
+    nodes: 2
+    devices:
+    - name: gpu
+      claim: DRA
+      driver: gpu.nvidia.com
+      deviceClassName: gpu.nvidia.com
+      count: 1
+      attributes:
+        architecture: { string: Ada Lovelace }
+      capacity:
+        memory: { value: "23034Mi" }
+---
+apiVersion: modelplane.ai/v1alpha1
+kind: InferenceCluster
+metadata:
+  name: nebius-eu-north
+  labels:
+    modelplane.ai/region: eu-north
+spec:
+  cluster:
+    source: Nebius
+    nebius: {}
+  stack: Standard
+status:
+  conditions:
+  - type: Ready
+    status: "True"
+    reason: Available
+    lastTransitionTime: "2026-10-27T00:00:00Z"
+  providerConfigRef:
+    name: nebius-eu-north
+  gateway:
+    address: 10.0.0.2
+    hostname: nebius-eu-north.gateway.example.com
+  gpuPools:
+  - name: gpu-l40s
+    nodes: 2
+    devices:
+    - name: gpu
+      claim: DRA
+      driver: gpu.nvidia.com
+      deviceClassName: gpu.nvidia.com
+      count: 1
+      attributes:
+        architecture: { string: Ada Lovelace }
+        cudaComputeCapability: { version: "8.9.0" }
+      capacity:
+        memory: { value: "46068Mi" }
+  - name: gpu-h100
+    nodes: 1
+    devices:
+    - name: gpu
+      claim: DRA
+      driver: gpu.nvidia.com
+      deviceClassName: gpu.nvidia.com
+      count: 8
+      attributes:
+        architecture: { string: Hopper }
+      capacity:
+        memory: { value: "81559Mi" }
