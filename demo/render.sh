@@ -27,7 +27,12 @@ args=(-e fleet/ -r)
 if [ -n "${CROSSPLANE_BINARY:-}" ]; then
 	args+=(--crossplane-binary="${CROSSPLANE_BINARY}")
 else
-	args+=(-a render.crossplane.io/runtime-development-target=host.docker.internal:9443)
+	# Docker's default bridge rather than a network of render's own, whose
+	# interface a host firewall may not trust.
+	args+=(
+		--crossplane-docker-network=bridge
+		-a render.crossplane.io/runtime-development-target=host.docker.internal:9443
+	)
 fi
 
 out=$(crossplane composition render "${deployment}" \
