@@ -6,13 +6,21 @@
 #
 # Pass --full to print the whole render instead of the summary.
 #
-# render runs the real Crossplane reconciler, in Docker by default. That
-# container has to reach the scheduler on this machine, which works through
-# host.docker.internal on Docker Desktop. Elsewhere, point CROSSPLANE_BINARY at
-# a native Crossplane binary and render runs it directly, with no container.
+# render runs the real Crossplane reconciler in Docker, which calls the
+# scheduler on this machine through host.docker.internal. If the container
+# can't connect, point CROSSPLANE_BINARY at a native Crossplane binary and
+# render runs it directly instead.
+#
+# Uses the crossplane CLI on PATH, or else the one in Modelplane's dev shell.
 set -euo pipefail
 
 : "${MODELPLANE:?set MODELPLANE to a Modelplane checkout}"
+
+crossplane=crossplane
+if ! command -v crossplane >/dev/null; then
+	# The dev shell prints a banner first, so the path is the last line.
+	crossplane=$(nix develop "${MODELPLANE}" -c sh -c 'command -v crossplane' | tail -n1)
+fi
 
 full=false
 if [ "${1:-}" = "--full" ]; then
@@ -35,7 +43,7 @@ else
 	)
 fi
 
-out=$(crossplane composition render "${deployment}" \
+out=$("${crossplane}" composition render "${deployment}" \
 	"${MODELPLANE}/apis/modeldeployments/composition.yaml" functions.yaml "${args[@]}")
 
 if ${full}; then

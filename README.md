@@ -13,8 +13,8 @@ against it with `crossplane composition render` to preview where a
 ModelDeployment would land without applying it. It then changes the scheduler
 from spreading replicas across clusters to packing them, and renders again.
 
-You need a Modelplane checkout, its Nix dev shell (for `crossplane`, `kubectl`
-and `uv`), and Docker.
+You need Nix, Docker, `kubectl`, and a Modelplane checkout. The scripts take
+`crossplane` and `uv` from Modelplane's dev shell.
 
 ```bash
 export MODELPLANE=~/src/modelplane
