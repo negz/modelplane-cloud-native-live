@@ -108,8 +108,9 @@ overcommit.
 ## Likely questions
 
 - **What if two deployments schedule concurrently?** Each schedules
-  independently, so both can count the same free nodes. DRA admission on the
-  workload cluster settles contention between deployments. A pod whose claim
+  independently, so both can count the same free nodes. The workload
+  cluster's scheduler settles contention between deployments when it
+  allocates devices through DRA. A pod whose claim
   DRA can't satisfy stays Pending, and the next reconcile reads the updated
   state.
 - **Why not schedule against real ResourceSlices?** They only exist for nodes
