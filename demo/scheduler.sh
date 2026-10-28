@@ -10,11 +10,9 @@ set -euo pipefail
 # Not localhost: render's Crossplane container calls in from outside the host.
 ADDRESS="${ADDRESS:-0.0.0.0:9443}"
 
-cmd=(nix develop -c uv run --frozen --package compose-model-deployment
-	python -m function.main --insecure --address "${ADDRESS}")
-
 cd "${MODELPLANE}"
-printf '$ cd %q\n$' "${MODELPLANE}"
-printf ' %q' "${cmd[@]}"
-printf '\n\n'
-exec "${cmd[@]}"
+printf '$ cd %q\n' "${MODELPLANE}"
+printf '$ nix develop -c \\\n    uv run --frozen --package compose-model-deployment \\\n    python -m function.main --insecure --address %q\n\n' "${ADDRESS}"
+exec nix develop -c \
+	uv run --frozen --package compose-model-deployment \
+	python -m function.main --insecure --address "${ADDRESS}"
