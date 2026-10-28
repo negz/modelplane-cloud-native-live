@@ -43,8 +43,16 @@ else
 	)
 fi
 
-out=$("${crossplane}" composition render "${deployment}" \
+cmd=(composition render "${deployment}"
 	"${MODELPLANE}/apis/modeldeployments/composition.yaml" functions.yaml "${args[@]}")
+
+# Show the command, to stderr so it stays out of the output, with the CLI by
+# name rather than by its Nix store path.
+printf '$ crossplane' >&2
+printf ' %q' "${cmd[@]}" >&2
+printf '\n\n' >&2
+
+out=$("${crossplane}" "${cmd[@]}")
 
 if ${full}; then
 	echo "${out}"
