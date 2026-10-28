@@ -31,7 +31,7 @@ deployment="${1:-qwen3-8b.yaml}"
 
 cd "$(dirname "$0")"
 
-args=(-e fleet/ -r)
+args=(--required-resources=fleet/ --include-function-results)
 if [ -n "${CROSSPLANE_BINARY:-}" ]; then
 	args+=(--crossplane-binary="${CROSSPLANE_BINARY}")
 else
@@ -39,7 +39,7 @@ else
 	# interface a host firewall may not trust.
 	args+=(
 		--crossplane-docker-network=bridge
-		-a render.crossplane.io/runtime-development-target=host.docker.internal:9443
+		--function-annotations=render.crossplane.io/runtime-development-target=host.docker.internal:9443
 	)
 fi
 
